@@ -1,5 +1,9 @@
 function Transactions() {
-  return <h1>Transactions</h1>;
+  return (
+    <main className="p-4">
+      <h1>Transactions</h1>
+    </main>
+  );
 }
 
 export default Transactions;
