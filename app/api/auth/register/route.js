@@ -39,6 +39,7 @@ export async function POST(req) {
       'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
       [user.username, user.email, hashedPassword]
     );
+    
     if (results) return new NextResponse(JSON.stringify(user), { status: 201 });
   } catch (err) {
     console.error('Error during registration:', err);

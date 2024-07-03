@@ -8,8 +8,9 @@
   }
 
   h1 {
-    @apply text-white md:text-4xl text-3xl font-bold;
+    @apply text-white text-3xl font-bold;
   }
+
 
   label{
     @apply text-light-gray md:text-sm text-xs;

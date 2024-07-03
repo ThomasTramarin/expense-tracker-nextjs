@@ -38,9 +38,8 @@ export const authOptions = {
             return null; // Passwords do not match
           }
 
-          //Successful authentication
+          // Successful authentication
           return user;
-
         } catch (err) {
           console.log("Error during authentication: " + err);
           return null; // Error
@@ -48,6 +47,22 @@ export const authOptions = {
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      // Add user id to the token
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Add the user id to the session
+      if (token) {
+        session.user.id = token.id;
+      }
+      return session;
+    },
+  },
   secret: process.env.NEXT_AUTH_SECRET,
 };
 

@@ -13,7 +13,7 @@ const links = [
   { id: 3, name: "Transactions", href: "/transactions" },
 ];
 
-function Navbar() {
+function NavbarApp() {
   const pathname = usePathname();
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -22,7 +22,7 @@ function Navbar() {
     setMenuOpen(!menuOpen);
   };
   return (
-    <nav className="border h-16 flex items-center justify-between px-6 border-b border-[#333333]">
+    <nav className="sticky top-0 bg-background border h-16 flex items-center justify-between px-6 border-b border-[#333333]">
       <button
         className="p-1 w-[40px] h-[40px] flex items-center justify-center hover:bg-[#27272A] rounded-md transition-colors duration-100 lg:hidden"
         onClick={handleMenuToggle}
@@ -39,7 +39,7 @@ function Navbar() {
           <li key={link.id}>
             <Link
               href={link.href}
-              className={`text-sm transition-colors duration-100 ${pathname === link.href ? "text-blue-500" : "text-light-gray hover:text-white"}`}
+              className={`text-sm transition-colors duration-100 ${pathname === link.href ? "text-blue-500 font-medium" : "text-light-gray hover:text-white"}`}
             >
               {link.name}
             </Link>
@@ -93,4 +93,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default NavbarApp;

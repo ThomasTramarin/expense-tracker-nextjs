@@ -32,7 +32,6 @@ export default function Login({params}) {
 
       }
     }
-    console.log(res)
 
   };
 
