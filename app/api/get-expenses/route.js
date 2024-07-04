@@ -13,22 +13,23 @@ export async function GET(req) {
     const userId = token.id;
 
     try {
-      // Query to get expenses grouped by data
+      // Query to get expenses grouped by data and ordered by transactionDate
       const results = await query(`
-        SELECT DATE(transactionDate) AS date, SUM(amount) AS totalExpense
+        SELECT DATE_FORMAT(transactionDate, '%d/%m/%Y') AS date, SUM(amount) AS totalExpense
         FROM transactions
-        WHERE user_id = ? AND type = 'expense'
-        GROUP BY DATE(transactionDate)
+        WHERE user_id = ? AND type = "expense"
+        GROUP BY DATE_FORMAT(transactionDate, '%d/%m/%Y')
+        ORDER BY transactionDate ASC
       `, [userId]);
       
-      const labels = results.map(row => new Date(row.date).toLocaleDateString());
+      const labels = results.map(row => row.date);
       const values = results.map(row => row.totalExpense);
 
       return NextResponse.json({ labels, values });
 
     } catch (error) {
-      console.error('Error during recovery transactions: ', error);
-      return NextResponse.json({ message: 'Error during recovery transactions:' }, { status: 500 });
+      console.error("Error during recovery transactions: ", error);
+      return NextResponse.json({ message: "Error during recovery transactions" }, { status: 500 });
     }
   } else {
     return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
