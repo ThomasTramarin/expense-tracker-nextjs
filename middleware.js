@@ -20,5 +20,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/overview", "/transactions", "/incomes", "/api/get-incomes", "/api/get-expenses", "/api/transactions"],
+  matcher: ["/overview", "/transactions", "/incomes", "/api/get-incomes", "/api/get-expenses", "/api/transactions", "/api/get-categories"],
 };

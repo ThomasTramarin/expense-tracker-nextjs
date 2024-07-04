@@ -1,18 +1,16 @@
 "use client";
 import { useContext } from "react";
 import { useState } from "react";
-import { GetIncomesContext } from "../../contexts/GetIncomesContext";
-import { GetCategoriesContext } from "../../contexts/GetCategoriesContext";
+import { GetExpensesContext } from "../../contexts/GetExpensesContext";
 
-export default function IncomesForm() {
-  const { setRefreshData: setIncomesRefreshData } = useContext(GetIncomesContext);
-  const { setRefreshData: setCategoriesRefreshData } = useContext(GetCategoriesContext);
+export default function ExpensesForm() {
+  const { setRefreshData } = useContext(GetExpensesContext);
 
-  const [incomeValues, setIncomeValues] = useState({
+  const [expenseValues, setExpenseValues] = useState({
     title: "",
     amount: null,
-    type: "income",
-    category: "salary",
+    type: "expense",
+    category: "housing",
     date: "",
   });
 
@@ -25,10 +23,10 @@ export default function IncomesForm() {
     e.preventDefault();
 
     if (
-      incomeValues.title === "" ||
-      incomeValues.amount === 0 ||
-      incomeValues.category === "" ||
-      incomeValues.date === ""
+      expenseValues.title === "" ||
+      expenseValues.amount === 0 ||
+      expenseValues.category === "" ||
+      expenseValues.date === ""
     ) {
       setInfo({
         message: "All fields are required",
@@ -48,7 +46,7 @@ export default function IncomesForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(incomeValues),
+        body: JSON.stringify(expenseValues),
       });
       if (response.ok) {
         const result = await response.json();
@@ -58,16 +56,16 @@ export default function IncomesForm() {
           type: "success",
         });
 
-        setIncomeValues({
+        setExpenseValues({
           title: "",
           amount: null,
-          type: "income",
-          category: "salary",
+          type: "expense",
+          category: "housing",
           date: "",
         });
 
-        setIncomesRefreshData(true);
-        setCategoriesRefreshData(true);
+        setRefreshData(true);
+
       } else {
         setInfo({
             message: "Failed to add income",
@@ -83,8 +81,7 @@ export default function IncomesForm() {
   };
 
   return (
-    <div className="p-4 bg-[#161617] rounded-lg">
-      <h2 className="text-white mb-4">Add new Income</h2>
+    <div>
       <form method="POST" onSubmit={handleSubmit}>
         <div className="flex flex-col mb-8">
           <label htmlFor="title" className="mb-1">
@@ -96,57 +93,60 @@ export default function IncomesForm() {
             id="title"
             maxLength={30}
             onChange={(e) =>
-              setIncomeValues({ ...incomeValues, title: e.target.value })
+              setExpenseValues({ ...expenseValues, title: e.target.value })
             }
-            value={incomeValues.title}
+            value={expenseValues.title}
           />
         </div>
         <div className="flex flex-col mb-8">
-          <label htmlFor="income-amount" className="mb-1">
+          <label htmlFor="expense-amount" className="mb-1">
             Amount
           </label>
           <input
             type="number"
-            name="income-amount"
-            id="income-amount"
+            name="expense-amount"
+            id="expense-amount"
             onChange={(e) =>
-              setIncomeValues({
-                ...incomeValues,
+              setExpenseValues({
+                ...expenseValues,
                 amount: Number(Math.abs(e.target.value).toFixed(2)),
               })
             }
-            value={incomeValues.amount}
+            value={expenseValues.amount}
           />
         </div>
         <div className="flex flex-col mb-8">
-          <label htmlFor="income-category" className="mb-1">
+          <label htmlFor="expense-category" className="mb-1">
             Category
           </label>
           <select
-            name="income-category"
-            id="income-category"
+            name="expense-category"
+            id="expense-category"
             onChange={(e) =>
-              setIncomeValues({ ...incomeValues, category: e.target.value })
+              setExpenseValues({ ...expenseValues, category: e.target.value })
             }
-            value={incomeValues.category}
+            value={expenseValues.category}
           >
-            <option value="salary">Salary</option>
-            <option value="bonus">Bonus</option>
-            <option value="bank-interests">Bank interests</option>
-            <option value="rental-income">Rental income</option>
-            <option value="gifts-and-donations">Gifts and donations</option>
+            <option value="housing">Housing</option>
+            <option value="transportation">Transportation</option>
+            <option value="food">Food</option>
+            <option value="utilities">Utilities</option>
+            <option value="healthcare">Healthcare</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="education">Education</option>
+            <option value="miscellaneous">Miscellaneous</option>
           </select>
         </div>
         <div className="flex flex-col mb-8">
-          <label htmlFor="income-date">Date</label>
+          <label htmlFor="expense-date">Date</label>
           <input
             type="date"
-            name="income-date"
-            id="income-date"
+            name="expense-date"
+            id="expense-date"
             onChange={(e) =>
-              setIncomeValues({ ...incomeValues, date: e.target.value })
+              setExpenseValues({ ...expenseValues, date: e.target.value })
             }
-            value={incomeValues.date}
+            value={expenseValues.date}
           />
           {info && (
             <span className={`${info.type === "success" ? "text-green-500" : "text-red-500"} mt-1 text-sm`}>{info.message}</span>
@@ -156,7 +156,7 @@ export default function IncomesForm() {
           type="submit"
           className="px-3 py-2 border rounded-md text-white font-medium border-gray-600 hover:border-[#27272A] hover:bg-[#27272A] transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
-          Add Income
+          Add Expense
         </button>
       </form>
     </div>

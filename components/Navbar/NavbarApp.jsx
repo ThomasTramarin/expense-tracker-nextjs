@@ -12,6 +12,7 @@ const links = [
   { id: 2, name: "Overview", href: "/overview" },
   { id: 3, name: "Transactions", href: "/transactions" },
   { id: 4, name: "Incomes", href: "/incomes" },
+  { id: 5, name: "Expenses", href: "/expenses" },
 ];
 
 function NavbarApp() {
