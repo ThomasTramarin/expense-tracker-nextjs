@@ -3,10 +3,12 @@ import { useContext } from "react";
 import { useState } from "react";
 import { GetIncomesContext } from "../../contexts/GetIncomesContext";
 import { GetCategoriesContext } from "../../contexts/GetCategoriesContext";
+import { GetTransactionsContext } from "../../contexts/GetTransactionsContext";
 
 export default function IncomesForm() {
   const { setRefreshData: setIncomesRefreshData } = useContext(GetIncomesContext);
   const { setRefreshData: setCategoriesRefreshData } = useContext(GetCategoriesContext);
+  const { setRefreshData: setTransactionsRefreshData } = useContext(GetTransactionsContext);
 
   const [incomeValues, setIncomeValues] = useState({
     title: "",
@@ -68,6 +70,7 @@ export default function IncomesForm() {
 
         setIncomesRefreshData(true);
         setCategoriesRefreshData(true);
+        setTransactionsRefreshData(true);
       } else {
         setInfo({
             message: "Failed to add income",

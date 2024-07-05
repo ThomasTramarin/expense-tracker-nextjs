@@ -3,10 +3,12 @@ import { useContext } from "react";
 import { useState } from "react";
 import { GetExpensesContext } from "../../contexts/GetExpensesContext";
 import { GetCategoriesContext } from "../../contexts/GetCategoriesContext";
+import { GetTransactionsContext } from "../../contexts/GetTransactionsContext";
 
 export default function ExpensesForm() {
   const { setRefreshData: setExpensesRefreshData } = useContext(GetExpensesContext);
   const { setRefreshData: setCategoriesRefreshData } = useContext(GetCategoriesContext);
+  const { setRefreshData: setTransactionsRefreshData } = useContext(GetTransactionsContext);
 
   const [expenseValues, setExpenseValues] = useState({
     title: "",
@@ -68,6 +70,7 @@ export default function ExpensesForm() {
 
         setExpensesRefreshData(true);
         setCategoriesRefreshData(true);
+        setTransactionsRefreshData(true);
 
       } else {
         setInfo({

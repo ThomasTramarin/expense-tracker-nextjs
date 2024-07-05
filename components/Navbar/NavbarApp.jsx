@@ -24,7 +24,7 @@ function NavbarApp() {
     setMenuOpen(!menuOpen);
   };
   return (
-    <nav className="sticky top-0 bg-background border h-16 flex items-center justify-between px-6 border-b border-[#333333]">
+    <nav className="sticky top-0 bg-background border h-16 flex items-center justify-between px-6 border-b border-[#333333] z-10">
       <button
         className="p-1 w-[40px] h-[40px] flex items-center justify-center hover:bg-[#27272A] rounded-md transition-colors duration-100 lg:hidden"
         onClick={handleMenuToggle}
@@ -60,7 +60,7 @@ function NavbarApp() {
       </div>
 
       {menuOpen && (
-        <div className="fixed top-16 left-0 w-full h-[calc(100%-64px)] bg-background p-6 flex flex-col justify-between lg:hidden">
+        <div className="fixed top-16 left-0 w-full h-[calc(100%-64px)] bg-background p-6 flex flex-col justify-between lg:hidden z-50">
           <ul className="">
             {links.map((link) => (
               <li key={link.id}>
