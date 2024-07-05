@@ -2,13 +2,15 @@
 import { useContext } from "react";
 import { useState } from "react";
 import { GetExpensesContext } from "../../contexts/GetExpensesContext";
+import { GetCategoriesContext } from "../../contexts/GetCategoriesContext";
 
 export default function ExpensesForm() {
-  const { setRefreshData } = useContext(GetExpensesContext);
+  const { setRefreshData: setExpensesRefreshData } = useContext(GetExpensesContext);
+  const { setRefreshData: setCategoriesRefreshData } = useContext(GetCategoriesContext);
 
   const [expenseValues, setExpenseValues] = useState({
     title: "",
-    amount: null,
+    amount: 0,
     type: "expense",
     category: "housing",
     date: "",
@@ -58,13 +60,14 @@ export default function ExpensesForm() {
 
         setExpenseValues({
           title: "",
-          amount: null,
+          amount: 0,
           type: "expense",
           category: "housing",
           date: "",
         });
 
-        setRefreshData(true);
+        setExpensesRefreshData(true);
+        setCategoriesRefreshData(true);
 
       } else {
         setInfo({
@@ -81,7 +84,8 @@ export default function ExpensesForm() {
   };
 
   return (
-    <div>
+    <div className="p-4 bg-[#161617] rounded-lg">
+      <h2 className="text-white mb-4">Add new Expense</h2>
       <form method="POST" onSubmit={handleSubmit}>
         <div className="flex flex-col mb-8">
           <label htmlFor="title" className="mb-1">

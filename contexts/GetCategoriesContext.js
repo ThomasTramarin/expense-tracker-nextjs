@@ -17,7 +17,6 @@ export const GetCategoriesProvider = ({ children }) => {
     try {
       const response = await fetch("http://localhost:3000/api/get-categories");
       const data = await response.json();
-      console.log(data)
       setData(data);
     } catch (err) {
       setError(err);

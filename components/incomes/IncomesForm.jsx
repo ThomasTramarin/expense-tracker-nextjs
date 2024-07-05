@@ -10,7 +10,7 @@ export default function IncomesForm() {
 
   const [incomeValues, setIncomeValues] = useState({
     title: "",
-    amount: null,
+    amount: 0,
     type: "income",
     category: "salary",
     date: "",
@@ -60,7 +60,7 @@ export default function IncomesForm() {
 
         setIncomeValues({
           title: "",
-          amount: null,
+          amount: 0,
           type: "income",
           category: "salary",
           date: "",
