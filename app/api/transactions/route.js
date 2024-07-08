@@ -68,9 +68,10 @@ export async function GET(req) {
   }
 }
 
+//Delete specific transaction
 export async function DELETE(req) {
-  const { searchParams } = new URL(req.url)
-  const transactionID = searchParams.get('transactionID')
+  const { searchParams } = new URL(req.url);
+  const transactionID = searchParams.get("transactionID");
 
   const secret = process.env.NEXT_AUTH_SECRET;
   const token = await getToken({ req, secret });
@@ -105,6 +106,65 @@ export async function DELETE(req) {
     } catch (err) {
       return NextResponse.json(
         { success: false, message: "Error deleting transaction" },
+        { status: 500 }
+      );
+    }
+  } else {
+    return NextResponse.json(
+      { success: false, message: "Not authenticated" },
+      { status: 401 }
+    );
+  }
+}
+
+export async function PUT(req) {
+  const body = await req.json();
+
+  const { searchParams } = new URL(req.url);
+  const transactionID = searchParams.get("transactionID");
+
+  const secret = process.env.NEXT_AUTH_SECRET;
+  const token = await getToken({ req, secret });
+
+  if (token) {
+    const userId = token.id;
+
+    try {
+      const transaction = await query(
+        "SELECT * FROM transactions WHERE user_id = ? AND transactionID = ?",
+        [userId, transactionID]
+      );
+
+      if (transaction.length === 0) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Transaction not found or user unauthorized",
+          },
+          { status: 404 }
+        );
+      }
+
+      await query(
+        "UPDATE transactions SET title = ?, type = ?, amount = ?, category = ?, transactionDate = ? WHERE transactionID = ? AND user_id = ?",
+        [
+          body.title,
+          body.type,
+          body.amount,
+          body.category,
+          body.transactionDate,
+          transactionID,
+          userId,
+        ]
+      );
+
+      return NextResponse.json({
+        success: true,
+        message: "Transaction updated successfully",
+      });
+    } catch (err) {
+      return NextResponse.json(
+        { success: false, message: "Error editing transaction" },
         { status: 500 }
       );
     }

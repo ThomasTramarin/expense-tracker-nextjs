@@ -24,7 +24,7 @@ function NavbarApp() {
     setMenuOpen(!menuOpen);
   };
   return (
-    <nav className="sticky top-0 bg-background border h-16 flex items-center justify-between px-6 border-b border-[#333333] z-10">
+    <nav className="sticky top-0 bg-background border h-16 flex items-center justify-between px-6 border-b border-[#333333] z-50">
       <button
         className="p-1 w-[40px] h-[40px] flex items-center justify-center hover:bg-[#27272A] rounded-md transition-colors duration-100 lg:hidden"
         onClick={handleMenuToggle}

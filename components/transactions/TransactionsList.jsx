@@ -1,8 +1,4 @@
 "use client";
-import { IoFilter, IoClose } from "react-icons/io5";
-import { TbDotsVertical } from "react-icons/tb";
-import { MdDelete } from "react-icons/md";
-import { FaSort, FaPencilAlt } from "react-icons/fa";
 import { useContext, useState, useEffect } from "react";
 
 import { GetTransactionsContext } from "../../contexts/GetTransactionsContext";
@@ -10,7 +6,13 @@ import { GetCategoriesContext } from "../../contexts/GetCategoriesContext";
 import { GetIncomesContext } from "../../contexts/GetIncomesContext";
 import { GetExpensesContext } from "../../contexts/GetExpensesContext";
 
+import TransactionItem from "./TransactionItem";
+import FilterSortControls from "./FilterSortControls";
+import TransactionOptions from "./TransactionOptions";
+import TransactionEdit from "./TransactionEdit";
+
 export default function TransactionsList() {
+  // Context import
   const {
     data,
     loading: loadingData,
@@ -24,6 +26,7 @@ export default function TransactionsList() {
   const { setRefreshData: setExpensesRefreshData } =
     useContext(GetExpensesContext);
 
+  // States
   const [openFilter, setOpenFilter] = useState(false);
   const [openSort, setOpenSort] = useState(false);
   const [transactionInfo, setTransactionInfo] = useState({
@@ -32,43 +35,44 @@ export default function TransactionsList() {
     x: 0,
     y: 0,
   });
-
-  //State for formatting data
+  const [editTransaction, setEditTransaction] = useState({
+    isOpen: false,
+    transactionID: 0,
+  });
   const [transactions, setTransactions] = useState([]);
   const [loadingTransactions, setLoadingTransactions] = useState(true);
 
+  const [sortOptions, setSortOptions] = useState({
+    sortBy: "date",
+    sortMode: "decreasing-reverse-alphabetical",
+  });
+
+  const [filterOptions, setFilterOptions] = useState({
+    searchTransaction: "",
+    searchBy: "id",
+    transactionsType: "all-types",
+  });
+
+  // Toggle functions for filter settings
   const toggleFilter = () => {
-    if (openFilter === false) {
-      if (openSort === true) {
-        setOpenSort(false);
-        setOpenFilter(true);
-      } else {
-        setOpenFilter(true);
-      }
-    } else {
-      setOpenFilter(false);
-    }
+    setOpenFilter(!openFilter);
+    if (openSort) setOpenSort(false);
   };
 
+  // Toggle functions for sorting settings
   const toggleSort = () => {
-    if (openSort === false) {
-      if (openFilter === true) {
-        setOpenFilter(false);
-        setOpenSort(true);
-      } else {
-        setOpenSort(true);
-      }
-    } else {
-      setOpenSort(false);
-    }
+    setOpenSort(!openSort);
+    if (openFilter) setOpenFilter(false);
   };
 
+  // Function to set data to the transaction options
   const handleTransactionOption = (e, id) => {
-    const x = e.pageX;
-    const y = e.pageY;
+    const x = e.pageX !== 0 ? e.pageX : 250;
+    const y = e.pageY !== 0 ? e.pageY : 150;
     setTransactionInfo({ isOpen: true, transactionID: id, x, y });
   };
 
+  // Function to delete transaction
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
@@ -87,140 +91,152 @@ export default function TransactionsList() {
         setCategoriesRefreshData(true);
         setTransactionsRefreshData(true);
       }
+
+      setTransactionInfo({ isOpen: false });
     } catch (err) {
       console.log(err);
     }
   };
+
+  // Function to edit transaction
   const handleEdit = (id) => {
-    console.log(id);
+    setEditTransaction({ isOpen: true, transactionID: id });
+    setTransactionInfo({ isOpen: false });
   };
 
+  const searchMatch = (arr) => {
+    if (filterOptions.searchTransaction === "") return arr;
+    const reg = new RegExp(filterOptions.searchTransaction, "i");
+
+    if (filterOptions.searchBy === "id") {
+      return arr.filter((transaction) =>
+        transaction.transactionID.toString().match(reg)
+      );
+    } else {
+      return arr.filter((transaction) => transaction.title.match(reg));
+    }
+  };
+
+  const selectedTransactionsType = (transactions) => {
+    if (filterOptions.transactionsType === "all-types") {
+      return transactions;
+    } else if (filterOptions.transactionsType === "only-incomes") {
+      return transactions.filter(
+        (transaction) => transaction.type === "income"
+      );
+    } else {
+      return transactions.filter(
+        (transaction) => transaction.type === "expense"
+      );
+    }
+  };
+
+  //Formatting data
   useEffect(() => {
     const formattedTransactions = data.map((transaction) => ({
       ...transaction,
-      transactionDate: new Date(
-        transaction.transactionDate
-      ).toLocaleDateString(),
+      transactionDate: new Date(transaction.transactionDate),
     }));
-    setTransactions(formattedTransactions);
+
+    const sortedTransactions = formattedTransactions.sort((a, b) => {
+      if (sortOptions.sortBy === "date") {
+        return sortOptions.sortMode === "increasing-alphabetical"
+          ? a.transactionDate - b.transactionDate
+          : b.transactionDate - a.transactionDate;
+      } else if (sortOptions.sortBy === "title") {
+        return sortOptions.sortMode === "increasing-alphabetical"
+          ? a.title.localeCompare(b.title)
+          : b.title.localeCompare(a.title);
+      } else if (sortOptions.sortBy === "amount") {
+        const amountA = a.type === "expense" ? -a.amount : a.amount;
+        const amountB = b.type === "expense" ? -b.amount : b.amount;
+        return sortOptions.sortMode === "increasing-alphabetical"
+          ? amountA - amountB
+          : amountB - amountA;
+      } else if (sortOptions.sortBy === "category") {
+        return sortOptions.sortMode === "increasing-alphabetical"
+          ? a.category.localeCompare(b.category)
+          : b.category.localeCompare(a.category);
+      }
+      return 0;
+    });
+
+    const typeTransactions = selectedTransactionsType(sortedTransactions);
+    const finalTransactions = searchMatch(typeTransactions);
+
+    setTransactions(finalTransactions);
     setLoadingTransactions(false);
-  }, [setLoadingTransactions, setTransactions, data]);
+  }, [data, sortOptions, filterOptions]);
 
   return (
     <>
       <div className="bg-[#161617] rounded-lg p-2 relative">
         <div className="flex justify-between mb-5 items-center">
           <h2 className="text-light-gray font-bold">List</h2>
-          <div className="flex gap-2 relative">
-            <button
-              className={`flex gap-2 items-center text-white text-sm p-2 border rounded-md ${
-                openFilter
-                  ? "outline outline-blue-500 border-blue-500"
-                  : "border-gray-600 hover:border-[#27272A]"
-              } hover:bg-[#27272A] transition-colors duration-100`}
-              onClick={toggleFilter}
-            >
-              Filter <IoFilter size={20} />
-            </button>
-            <button
-              className={`flex gap-2 items-center text-white text-sm p-2 border rounded-md ${
-                openSort
-                  ? "outline outline-blue-500 border-blue-500"
-                  : "border-gray-600 hover:border-[#27272A]"
-              } hover:bg-[#27272A] transition-colors duration-100`}
-              onClick={toggleSort}
-            >
-              Sort <FaSort size={20} />
-            </button>
-
-            {/* Filter Options */}
-            {openFilter && (
-              <div className="absolute top-10 right-20 border border-zinc-500 rounded-md bg-[#232323] p-2">
-                <h2 className="text-white">Filtri</h2>
-              </div>
-            )}
-          </div>
+          <FilterSortControls
+            toggleFilter={toggleFilter}
+            toggleSort={toggleSort}
+            openFilter={openFilter}
+            openSort={openSort}
+            sortOptions={sortOptions}
+            setSortOptions={setSortOptions}
+            filterOptions={filterOptions}
+            setFilterOptions={setFilterOptions}
+          />
         </div>
 
-        <div>
+        <div className="overflow-auto h-[70vh] px-1">
           <ul className="flex flex-col gap-2">
+            {loadingTransactions && (
+              <>
+                <li className="h-16 w-full mt-2 bg-[#2f2f31] animate-pulse rounded-lg"></li>
+                <li className="h-16 w-full mt-2 bg-[#2f2f31] animate-pulse rounded-lg"></li>
+                <li className="h-16 w-full mt-2 bg-[#2f2f31] animate-pulse rounded-lg"></li>
+              </>
+            )}
+
             {!loadingData &&
               !loadingTransactions &&
+              data.length > 0 &&
               transactions.map((transaction) => (
-                <li
-                  className="p-2 bg-[#262626] rounded-lg"
+                <TransactionItem
                   key={transaction.transactionID}
-                >
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-white break-all">
-                      {transaction.title}
-                    </h3>
-                    <button
-                      onClick={(e) =>
-                        handleTransactionOption(e, transaction.transactionID)
-                      }
-                    >
-                      <TbDotsVertical
-                        cursor={"pointer"}
-                        color="white"
-                        size={18}
-                      />
-                    </button>
-                  </div>
-
-                  <div className="flex gap justify-between items-center">
-                    <p className="text-light-gray text-sm">
-                      {transaction.transactionDate} &sdot;{" "}
-                      {transaction.category}
-                    </p>
-                    <p
-                      className={`text-sm ${
-                        transaction.type === "income"
-                          ? "text-green-500"
-                          : "text-red-500"
-                      } font-medium`}
-                    >
-                      {transaction.type === "income" ? "+" : "-"}{" "}
-                      {transaction.amount} $
-                    </p>
-                  </div>
-                </li>
+                  transaction={{
+                    ...transaction,
+                    transactionDate:
+                      transaction.transactionDate.toLocaleDateString(),
+                  }}
+                  handleTransactionOption={handleTransactionOption}
+                />
               ))}
+            {!loadingData && !loadingTransactions && data.length === 0 && (
+              <li className="p-2 bg-[#262626] rounded-lg text-white">
+                No transactions found...
+              </li>
+            )}
           </ul>
         </div>
       </div>
 
       {transactionInfo.isOpen && (
-        <div
-          className="absolute w-52 rounded-lg overflow-hidden bg-zinc-700"
-          style={{ top: transactionInfo.y, left: transactionInfo.x - 208 }}
-        >
-          <div className="flex justify-between p-2">
-            <p>Transaction Details</p>
-            <button
-              onClick={() =>
-                setTransactionInfo({ ...transactionInfo, isOpen: false })
-              }
-            >
-              <IoClose size={20} color="white" />
-            </button>
-          </div>
-          <ul className="text-white">
-            <li className="p-2">ID: {transactionInfo.transactionID}</li>
-            <li
-              className="hover:bg-zinc-600 p-2 flex gap-2 items-center cursor-pointer"
-              onClick={() => handleDelete(transactionInfo.transactionID)}
-            >
-              <MdDelete size={20} /> Delete
-            </li>
-            <li
-              className="hover:bg-zinc-600 p-2 flex gap-2 items-center cursor-pointer"
-              onClick={() => handleEdit(transactionInfo.transactionID)}
-            >
-              <FaPencilAlt size={20} /> Edit
-            </li>
-          </ul>
-        </div>
+        <TransactionOptions
+          transactionInfo={transactionInfo}
+          setTransactionInfo={setTransactionInfo}
+          handleDelete={handleDelete}
+          handleEdit={handleEdit}
+        />
+      )}
+
+      {editTransaction.isOpen && (
+        <TransactionEdit
+          editTransaction={editTransaction}
+          setEditTransaction={setEditTransaction}
+          data={transactions}
+          setExpensesRefreshData={setExpensesRefreshData}
+          setIncomesRefreshData={setIncomesRefreshData}
+          setCategoriesRefreshData={setCategoriesRefreshData}
+          setTransactionsRefreshData={setTransactionsRefreshData}
+        />
       )}
     </>
   );

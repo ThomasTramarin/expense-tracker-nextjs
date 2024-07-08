@@ -24,7 +24,7 @@
     @apply text-light-gray md:text-sm text-xs;
   }
 
-  input{
+  input[type="text"], input[type="password"], input[type="email"], input[type="search"], input[type="number"], input[type="date"]{
     @apply bg-transparent text-white rounded-md border border-gray-600 px-3 py-2 hover:border-gray-500 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full;
   }
 
@@ -45,4 +45,21 @@
 
 ::-webkit-calendar-picker-indicator {
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 24 24"><path fill="%23bbbbbb" d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>');
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #09090B;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #212121;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #252525;
 }
