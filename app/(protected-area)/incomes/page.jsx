@@ -1,6 +1,10 @@
 import IncomesForm from "../../../components/incomes/IncomesForm";
 import TotalIncomeCategories from "../../../components/incomes/TotalIncomeCategories";
 
+export const metadata = {
+  title: "Incomes"
+}
+
 export default function IncomesPage() {
   return (
     <main className="p-4">

@@ -67,18 +67,18 @@ export default function FilterSortControls({
             </div>
             <div className="mb-3 flex justify-around">
               <div>
-                <input type="radio" name="transactions-type" id="all-types" checked={filterOptions.transactionsType === "all-types"} onChange={() => setFilterOptions({...filterOptions, transactionsType: "all-types"})} value="all-type" className="hidden peer"/>
-                <label htmlFor="all-types" className="text-sm text-white border peer-checked:border-blue-600 peer-checked:bg-[#22203a] border-slate-500 px-3 py-1 rounded-full cursor-pointer">All</label>
+                <input type="radio" name="transactions-type" id="all-types" checked={filterOptions.transactionsType === "all-types"} onChange={() => setFilterOptions({...filterOptions, transactionsType: "all-types"})} value="all-types" className="hidden peer"/>
+                <label htmlFor="all-types" tabIndex="0" className="text-sm text-white border peer-checked:border-blue-600 peer-checked:bg-[#22203a] border-slate-500 px-3 py-1 rounded-full cursor-pointer" onKeyDown={(e) => {if(e.key === " " || e.key === "Enter") setFilterOptions({...filterOptions, transactionsType: "all-types"})}}>All</label>
               </div>
                 
               <div>
                 <input type="radio" name="transactions-type" id="only-incomes" checked={filterOptions.transactionsType === "only-incomes"} onChange={() => setFilterOptions({...filterOptions, transactionsType: "only-incomes"})} value="only-incomes" className="hidden peer"/>
-                <label htmlFor="only-incomes" className="text-sm text-white border peer-checked:border-blue-600 peer-checked:bg-[#22203a] border-slate-500 px-3 py-1 rounded-full cursor-pointer">Incomes</label>
+                <label htmlFor="only-incomes" tabIndex="0" className="text-sm text-white border peer-checked:border-blue-600 peer-checked:bg-[#22203a] border-slate-500 px-3 py-1 rounded-full cursor-pointer" onKeyDown={(e) => {if(e.key === " " || e.key === "Enter") setFilterOptions({...filterOptions, transactionsType: "only-incomes"})}}>Incomes</label>
               </div>
 
               <div>
-                <input type="radio" name="transactions-type" id="only-expenses" checked={filterOptions.transactionsType === "only-expenses"} onChange={() => setFilterOptions({...filterOptions, transactionsType: "only-expenses"})} value="only-expenses" className="hidden peer"/>
-                <label htmlFor="only-expenses" className="text-sm text-white border peer-checked:border-blue-600 peer-checked:bg-[#22203a] border-slate-500 px-3 py-1 rounded-full cursor-pointer">Expenses</label>
+                <input type="radio" name="transactions-type" id="only-expenses" checked={filterOptions.transactionsType === "only-expenses"} onChange={() => setFilterOptions({...filterOptions, transactionsType: "only-expenses"})} value="only-expenses" className="hidden peer" />
+              <label htmlFor="only-expenses" tabIndex="0" className="text-sm text-white border peer-checked:border-blue-600 peer-checked:bg-[#22203a] border-slate-500 px-3 py-1 rounded-full cursor-pointer" onKeyDown={(e) => {if(e.key === " " || e.key === "Enter") setFilterOptions({...filterOptions, transactionsType: "only-expenses"})}}>Expenses</label>
               </div>
             </div>
           </form>

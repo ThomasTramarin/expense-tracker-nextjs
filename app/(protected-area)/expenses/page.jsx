@@ -1,6 +1,10 @@
 import ExpensesForm from "../../../components/expenses/ExpensesForm";
 import TotalExpenseCategories from "@/components/expenses/TotalExpenseCategories";
 
+export const metadata = {
+  title: "Expenses"
+}
+
 export default function ExpensesPage() {
   return (
     <main className="p-4">

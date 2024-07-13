@@ -61,7 +61,7 @@ export default function TransactionEdit({
   };
 
   return (
-    <div className="absolute w-[95vw] p-2 border rounded-xl bg-[#161617] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+    <div className="absolute w-[95vw] p-2 border border-zinc-700 rounded-xl bg-[#161617] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
       <h2 className="text-white mb-3">Edit Transaction</h2>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col mb-8">

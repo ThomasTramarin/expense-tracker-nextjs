@@ -228,6 +228,7 @@ export default function TransactionsList() {
       )}
 
       {editTransaction.isOpen && (
+        <>
         <TransactionEdit
           editTransaction={editTransaction}
           setEditTransaction={setEditTransaction}
@@ -237,7 +238,11 @@ export default function TransactionsList() {
           setCategoriesRefreshData={setCategoriesRefreshData}
           setTransactionsRefreshData={setTransactionsRefreshData}
         />
+        <div className="fixed top-0 left-0 w-full h-full bg-black opacity-75 z-10"></div>
+        </>
       )}
+
+  
     </>
   );
 }

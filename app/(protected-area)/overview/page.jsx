@@ -2,6 +2,9 @@ import TotalIncome from "../../../components/overview/TotalIncome";
 import TotalExpense from "../../../components/overview/TotalExpense";
 import TotalBalance from "../../../components/overview/TotalBalance";
 
+export const metadata = {
+  title: "Overview"
+}
 
 function Overview() {
 
