@@ -61,6 +61,7 @@ CREATE TABLE users (
 CREATE TABLE transactions (
   transactionID INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT,
+  title VARCHAR(30) NOT NULL,
   type ENUM("income", "expense") NOT NULL,
   amount FLOAT NOT NULL,
   category VARCHAR(100) NOT NULL,
